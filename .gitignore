@@ -2,3 +2,4 @@ sample/*
 logs/*
 checkpoint/*
 val/*
+*.pyc
