@@ -41,7 +41,7 @@ python main.py --phase test
 Code currently supports [CMP Facades](http://cmp.felk.cvut.cz/~tylecr1/facade/) dataset. To reproduce results presented above, it takes 200 epochs of training. Exact computing time depends on own hardware conditions.
 
 ## Test
-Test the model on validation set of [CMP Facades](http://cmp.felk.cvut.cz/~tylecr1/facade/) dataset. It will generate synthesized images provided corresponding labels under directory `./results`.
+Test the model on validation set of [CMP Facades](http://cmp.felk.cvut.cz/~tylecr1/facade/) dataset. It will generate synthesized images provided corresponding labels under directory `./test`.
 
 
 ## Acknowledgments
