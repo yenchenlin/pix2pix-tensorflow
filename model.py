@@ -121,11 +121,7 @@ class pix2pix(object):
         self.d_sum = tf.merge_summary([self.d_sum, self.d_loss_real_sum, self.d_loss_sum])
         self.writer = tf.train.SummaryWriter("./logs", self.sess.graph)
 
-        #data = glob('./val/1.jpg')
-        #sample_files = data[0:self.sample_size]
-        #sample = [load_data(sample_file) for sample_file in sample_files]
-
-        data = './val/1.jpg'
+        data = './datasets/{}/val/1.jpg'.format(args.dataset_name)
         sample = [load_data(data, flip=False)]
 
         if (self.is_grayscale):
@@ -142,7 +138,7 @@ class pix2pix(object):
             print(" [!] Load failed...")
 
         for epoch in xrange(args.epoch):
-            data = glob('./data/*.jpg')
+            data = glob('./datasets/{}/train/*.jpg'.format(args.dataset_name))
             #np.random.shuffle(data)
             batch_idxs = min(len(data), args.train_size) // args.batch_size
 
@@ -381,7 +377,7 @@ class pix2pix(object):
         """Test pix2pix"""
         tf.initialize_all_variables().run()
 
-        sample_files = glob('./val/*.jpg')
+        sample_files = glob('./datasets/{}/val/*.jpg'.format(args.dataset_name))
 
         # sort testing input
         n = [int(i) for i in map(lambda x: x.split('/')[-1].split('.jpg')[0], sample_files)]

@@ -9,7 +9,7 @@ from utils import pp, visualize, to_json
 import tensorflow as tf
 
 parser = argparse.ArgumentParser(description='')
-parser.add_argument('--DATA_ROOT', dest='DATA_ROOT', help='path to images')
+parser.add_argument('--dataset_name', dest='dataset_name', default='facades', help='name of the dataset')
 parser.add_argument('--epoch', dest='epoch', type=int, default=200, help='# of epoch')
 parser.add_argument('--batch_size', dest='batch_size', type=int, default=1, help='# images in batch')
 parser.add_argument('--train_size', dest='train_size', type=int, default=1e8, help='# images used to train')
@@ -43,6 +43,8 @@ def main(_):
         os.makedirs(args.checkpoint_dir)
     if not os.path.exists(args.sample_dir):
         os.makedirs(args.sample_dir)
+    if not os.path.exists(args.test_dir):
+        os.makedirs(args.test_dir)
 
     with tf.Session() as sess:
         model = pix2pix(sess, image_size=args.fine_size, batch_size=args.batch_size,
