@@ -72,8 +72,8 @@ class pix2pix(object):
                                          self.input_c_dim + self.output_c_dim],
                                         name='real_A_and_B_images')
 
-        self.real_A = self.real_data[:, :, :, :self.input_c_dim]
-        self.real_B = self.real_data[:, :, :, self.input_c_dim:self.input_c_dim + self.output_c_dim]
+        self.real_B = self.real_data[:, :, :, :self.input_c_dim]
+        self.real_A = self.real_data[:, :, :, self.input_c_dim:self.input_c_dim + self.output_c_dim]
 
         self.fake_B = self.generator(self.real_A)
 
@@ -121,10 +121,13 @@ class pix2pix(object):
         self.d_sum = tf.merge_summary([self.d_sum, self.d_loss_real_sum, self.d_loss_sum])
         self.writer = tf.train.SummaryWriter("./logs", self.sess.graph)
 
-        data = glob('./data/*.jpg')
+        #data = glob('./val/1.jpg')
+        #sample_files = data[0:self.sample_size]
+        #sample = [load_data(sample_file) for sample_file in sample_files]
 
-        sample_files = data[0:self.sample_size]
-        sample = [load_data(sample_file) for sample_file in sample_files]
+        data = './val/1.jpg'
+        sample = [load_data(data, flip=False)]
+
         if (self.is_grayscale):
             sample_images = np.array(sample).astype(np.float32)[:, :, :, None]
         else:
@@ -145,7 +148,7 @@ class pix2pix(object):
 
             for idx in xrange(0, batch_idxs):
                 batch_files = data[idx*args.batch_size:(idx+1)*args.batch_size]
-                batch = [load_data(sample_file) for batch_file in batch_files]
+                batch = [load_data(batch_file) for batch_file in batch_files]
                 if (self.is_grayscale):
                     batch_images = np.array(batch).astype(np.float32)[:, :, :, None]
                 else:
@@ -178,7 +181,7 @@ class pix2pix(object):
                 if np.mod(counter, 100) == 1:
                     samples, d_loss, g_loss = self.sess.run(
                         [self.fake_B_sample, self.d_loss, self.g_loss],
-                        feed_dict={self.real_data: batch_images}
+                        feed_dict={self.real_data: sample_images}
                     )
                     save_images(samples, [8, 8],
                                 './{}/train_{:02d}_{:04d}.png'.format(args.sample_dir, epoch, idx))
