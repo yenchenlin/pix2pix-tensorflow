@@ -183,7 +183,7 @@ class pix2pix(object):
                         [self.fake_B_sample, self.d_loss, self.g_loss],
                         feed_dict={self.real_data: sample_images}
                     )
-                    save_images(samples, [8, 8],
+                    save_images(samples, [1, 1],
                                 './{}/train_{:02d}_{:04d}.png'.format(args.sample_dir, epoch, idx))
                     print("[Sample] d_loss: %.8f, g_loss: %.8f" % (d_loss, g_loss))
 
@@ -376,3 +376,37 @@ class pix2pix(object):
             return True
         else:
             return False
+
+    def test(self, args):
+        """Test pix2pix"""
+        tf.initialize_all_variables().run()
+
+        sample_files = glob('./val/*.jpg')
+
+        # sort testing input
+        n = [int(i) for i in map(lambda x: x.split('/')[-1].split('.jpg')[0], sample_files)]
+        sample_files = [x for (y, x) in sorted(zip(n, sample_files))]
+
+        # load testing input
+        sample = [load_data(sample_file, is_test=True) for sample_file in sample_files]
+
+        if (self.is_grayscale):
+            sample_images = np.array(sample).astype(np.float32)[:, :, :, None]
+        else:
+            sample_images = np.array(sample).astype(np.float32)
+
+        start_time = time.time()
+        if self.load(self.checkpoint_dir):
+            print(" [*] Load SUCCESS")
+        else:
+            print(" [!] Load failed...")
+
+        for i, sample_image in enumerate(sample_images):
+            idx = i+1
+            print "sampling image ", idx
+            samples = self.sess.run(
+                self.fake_B_sample,
+                feed_dict={self.real_data: [sample_image]}
+            )
+            save_images(samples, [1, 1],
+                        './{}/test_{:04d}.png'.format(args.test_dir, idx))

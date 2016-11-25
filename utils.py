@@ -17,9 +17,13 @@ get_stddev = lambda x, k_h, k_w: 1/math.sqrt(k_w*k_h*x.get_shape()[-1])
 # -----------------------------
 # new added functions for pix2pix
 
-def load_data(image_path, flip=True):
+def load_data(image_path, flip=True, is_test=False):
     img_A, img_B = load_image(image_path)
-    img_A, img_B = preprocess_A_and_B(img_A, img_B, flip=flip)
+    if not is_test:
+        img_A, img_B = preprocess_A_and_B(img_A, img_B, flip=flip)
+    img_A = img_A/127.5 - 1.
+    img_B = img_B/127.5 - 1.
+
     img_AB = np.concatenate((img_A, img_B), axis=2)
     # img_AB shape: (fine_size, fine_size, input_c_dim + output_c_dim)
     return img_AB
@@ -45,9 +49,6 @@ def preprocess_A_and_B(img_A, img_B, load_size=286, fine_size=256, flip=True):
     if flip and np.random.random() > 0.5:
         img_A = np.fliplr(img_A)
         img_B = np.fliplr(img_B)
-
-    img_A = img_A/127.5 - 1.
-    img_B = img_B/127.5 - 1.
 
     return img_A, img_B
 
