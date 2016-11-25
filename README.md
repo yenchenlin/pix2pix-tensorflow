@@ -24,7 +24,7 @@ More results on other datasets coming soon!
 git clone git@github.com:yenchenlin/pix2pix-tensorflow.git
 cd pix2pix-tensorflow
 ```
-- Download the dataset (script borrowed from [author's implementation](https://github.com/phillipi/pix2pix/blob/master/datasets/download_dataset.sh)):
+- Download the dataset (script borrowed from [torch implementation](https://github.com/phillipi/pix2pix/blob/master/datasets/download_dataset.sh)):
 ```bash
 bash ./datasets/download_dataset.sh facades
 ```
