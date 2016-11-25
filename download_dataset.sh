@@ -1,3 +1,4 @@
+mkdir datasets
 FILE=$1
 URL=https://people.eecs.berkeley.edu/~isola/pix2pix/$FILE.tar
 TAR_FILE=./datasets/$FILE.tar

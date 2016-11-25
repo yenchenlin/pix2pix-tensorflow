@@ -26,7 +26,7 @@ cd pix2pix-tensorflow
 ```
 - Download the dataset (script borrowed from [torch code](https://github.com/phillipi/pix2pix/blob/master/datasets/download_dataset.sh)):
 ```bash
-bash ./datasets/download_dataset.sh facades
+bash ./download_dataset.sh facades
 ```
 - Train the model
 ```bash
