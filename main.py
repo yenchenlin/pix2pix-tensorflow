@@ -4,8 +4,6 @@ import scipy.misc
 import numpy as np
 
 from model import pix2pix
-from utils import pp, visualize, to_json
-
 import tensorflow as tf
 
 parser = argparse.ArgumentParser(description='')
