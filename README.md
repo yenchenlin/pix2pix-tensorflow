@@ -4,7 +4,7 @@ TensorFlow implementation of [Image-to-Image Translation Using Conditional Adver
 
 - Facades:
 
-<img src="./label_to_facades.png" width="900px"/>
+  <img src="./label_to_facades.png" width="700px"/>
 
 More results on other datasets coming soon!
 
