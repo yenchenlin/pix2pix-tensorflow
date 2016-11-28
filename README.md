@@ -34,7 +34,7 @@ python main.py --phase test
 ```
 
 ## Results
-Here is the results generate from this implementation:
+Here is the results generated from this implementation:
 
 - Facades:
 
@@ -42,7 +42,7 @@ Here is the results generate from this implementation:
 
 More results on other datasets coming soon!
 
-**Note**: To avoid the fast convergence of D (discriminator) network, G (generator) network is updated twice for each D network update, which differs from original paper but Same as [DCGAN-tensorflow](https://github.com/carpedm20/DCGAN-tensorflow), which this project based on.
+**Note**: To avoid the fast convergence of D (discriminator) network, G (generator) network is updated twice for each D network update, which differs from original paper but same as [DCGAN-tensorflow](https://github.com/carpedm20/DCGAN-tensorflow), which this project based on.
 
 ## Train
 Code currently supports [CMP Facades](http://cmp.felk.cvut.cz/~tylecr1/facade/) dataset. To reproduce results presented above, it takes 200 epochs of training. Exact computing time depends on own hardware conditions.
