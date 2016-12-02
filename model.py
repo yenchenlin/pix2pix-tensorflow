@@ -108,6 +108,27 @@ class pix2pix(object):
 
         self.saver = tf.train.Saver()
 
+
+    def load_random_samples(self):
+        data = np.random.choice(glob('./datasets/{}/val/*.jpg'.format(self.dataset_name)), self.batch_size)
+        sample = [load_data(sample_file) for sample_file in data]
+
+        if (self.is_grayscale):
+            sample_images = np.array(sample).astype(np.float32)[:, :, :, None]
+        else:
+            sample_images = np.array(sample).astype(np.float32)
+        return sample_images
+
+    def sample_model(self, sample_dir, epoch, idx):
+        sample_images = self.load_random_samples()
+        samples, d_loss, g_loss = self.sess.run(
+            [self.fake_B_sample, self.d_loss, self.g_loss],
+            feed_dict={self.real_data: sample_images}
+        )
+        save_images(samples, [self.batch_size, 1],
+                    './{}/train_{:02d}_{:04d}.png'.format(sample_dir, epoch, idx))
+        print("[Sample] d_loss: {:.8f}, g_loss: {:.8f}".format(d_loss, g_loss))
+
     def train(self, args):
         """Train pix2pix"""
         d_optim = tf.train.AdamOptimizer(args.lr, beta1=args.beta1) \
@@ -121,14 +142,6 @@ class pix2pix(object):
         self.d_sum = tf.merge_summary([self.d_sum, self.d_loss_real_sum, self.d_loss_sum])
         self.writer = tf.train.SummaryWriter("./logs", self.sess.graph)
 
-        data = './datasets/{}/val/1.jpg'.format(args.dataset_name)
-        sample = [load_data(data, flip=False)]
-
-        if (self.is_grayscale):
-            sample_images = np.array(sample).astype(np.float32)[:, :, :, None]
-        else:
-            sample_images = np.array(sample).astype(np.float32)
-
         counter = 1
         start_time = time.time()
 
@@ -138,12 +151,12 @@ class pix2pix(object):
             print(" [!] Load failed...")
 
         for epoch in xrange(args.epoch):
-            data = glob('./datasets/{}/train/*.jpg'.format(args.dataset_name))
+            data = glob('./datasets/{}/train/*.jpg'.format(self.dataset_name))
             #np.random.shuffle(data)
-            batch_idxs = min(len(data), args.train_size) // args.batch_size
+            batch_idxs = min(len(data), args.train_size) // self.batch_size
 
             for idx in xrange(0, batch_idxs):
-                batch_files = data[idx*args.batch_size:(idx+1)*args.batch_size]
+                batch_files = data[idx*self.batch_size:(idx+1)*self.batch_size]
                 batch = [load_data(batch_file) for batch_file in batch_files]
                 if (self.is_grayscale):
                     batch_images = np.array(batch).astype(np.float32)[:, :, :, None]
@@ -175,13 +188,7 @@ class pix2pix(object):
                         time.time() - start_time, errD_fake+errD_real, errG))
 
                 if np.mod(counter, 100) == 1:
-                    samples, d_loss, g_loss = self.sess.run(
-                        [self.fake_B_sample, self.d_loss, self.g_loss],
-                        feed_dict={self.real_data: sample_images}
-                    )
-                    save_images(samples, [1, 1],
-                                './{}/train_{:02d}_{:04d}.png'.format(args.sample_dir, epoch, idx))
-                    print("[Sample] d_loss: %.8f, g_loss: %.8f" % (d_loss, g_loss))
+                    self.sample_model(args.sample_dir, epoch, idx)
 
                 if np.mod(counter, 500) == 2:
                     self.save(args.checkpoint_dir, counter)
@@ -377,7 +384,7 @@ class pix2pix(object):
         """Test pix2pix"""
         tf.initialize_all_variables().run()
 
-        sample_files = glob('./datasets/{}/val/*.jpg'.format(args.dataset_name))
+        sample_files = glob('./datasets/{}/val/*.jpg'.format(self.dataset_name))
 
         # sort testing input
         n = [int(i) for i in map(lambda x: x.split('/')[-1].split('.jpg')[0], sample_files)]
