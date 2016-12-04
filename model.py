@@ -398,6 +398,11 @@ class pix2pix(object):
         else:
             sample_images = np.array(sample).astype(np.float32)
 
+        sample_images = [sample_images[i:i+self.batch_size]
+                         for i in xrange(0, len(sample_images), self.batch_size)]
+        sample_images = np.array(sample_images)
+        print sample_images.shape
+
         start_time = time.time()
         if self.load(self.checkpoint_dir):
             print(" [*] Load SUCCESS")
@@ -409,7 +414,7 @@ class pix2pix(object):
             print "sampling image ", idx
             samples = self.sess.run(
                 self.fake_B_sample,
-                feed_dict={self.real_data: [sample_image]}
+                feed_dict={self.real_data: sample_image}
             )
-            save_images(samples, [1, 1],
+            save_images(samples, [self.batch_size, 1],
                         './{}/test_{:04d}.png'.format(args.test_dir, idx))
