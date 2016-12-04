@@ -46,7 +46,7 @@ def main(_):
 
     with tf.Session() as sess:
         model = pix2pix(sess, image_size=args.fine_size, batch_size=args.batch_size,
-                        output_size=args.fine_size,
+                        output_size=args.fine_size, dataset_name=args.dataset_name,
                         checkpoint_dir=args.checkpoint_dir, sample_dir=args.sample_dir)
 
         if args.phase == 'train':
