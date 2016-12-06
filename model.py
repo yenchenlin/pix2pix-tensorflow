@@ -391,6 +391,7 @@ class pix2pix(object):
         sample_files = [x for (y, x) in sorted(zip(n, sample_files))]
 
         # load testing input
+        print("Loading testing images ...")
         sample = [load_data(sample_file, is_test=True) for sample_file in sample_files]
 
         if (self.is_grayscale):
