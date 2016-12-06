@@ -19,8 +19,8 @@ get_stddev = lambda x, k_h, k_w: 1/math.sqrt(k_w*k_h*x.get_shape()[-1])
 
 def load_data(image_path, flip=True, is_test=False):
     img_A, img_B = load_image(image_path)
-    if not is_test:
-        img_A, img_B = preprocess_A_and_B(img_A, img_B, flip=flip)
+    img_A, img_B = preprocess_A_and_B(img_A, img_B, flip=flip, is_test=is_test)
+
     img_A = img_A/127.5 - 1.
     img_B = img_B/127.5 - 1.
 
@@ -37,18 +37,22 @@ def load_image(image_path):
 
     return img_A, img_B
 
-def preprocess_A_and_B(img_A, img_B, load_size=286, fine_size=256, flip=True):
-    img_A = scipy.misc.imresize(img_A, [load_size, load_size])
-    img_B = scipy.misc.imresize(img_B, [load_size, load_size])
+def preprocess_A_and_B(img_A, img_B, load_size=286, fine_size=256, flip=True, is_test=False):
+    if is_test:
+        img_A = scipy.misc.imresize(img_A, [fine_size, fine_size])
+        img_B = scipy.misc.imresize(img_B, [fine_size, fine_size])
+    else:
+        img_A = scipy.misc.imresize(img_A, [load_size, load_size])
+        img_B = scipy.misc.imresize(img_B, [load_size, load_size])
 
-    h1 = int(np.ceil(np.random.uniform(1e-2, load_size-fine_size)))
-    w1 = int(np.ceil(np.random.uniform(1e-2, load_size-fine_size)))
-    img_A = img_A[h1:h1+fine_size, w1:w1+fine_size]
-    img_B = img_B[h1:h1+fine_size, w1:w1+fine_size]
+        h1 = int(np.ceil(np.random.uniform(1e-2, load_size-fine_size)))
+        w1 = int(np.ceil(np.random.uniform(1e-2, load_size-fine_size)))
+        img_A = img_A[h1:h1+fine_size, w1:w1+fine_size]
+        img_B = img_B[h1:h1+fine_size, w1:w1+fine_size]
 
-    if flip and np.random.random() > 0.5:
-        img_A = np.fliplr(img_A)
-        img_B = np.fliplr(img_B)
+        if flip and np.random.random() > 0.5:
+            img_A = np.fliplr(img_A)
+            img_B = np.fliplr(img_B)
 
     return img_A, img_B
 
