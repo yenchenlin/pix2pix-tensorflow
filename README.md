@@ -53,3 +53,6 @@ Test the model on validation set of [CMP Facades](http://cmp.felk.cvut.cz/~tylec
 
 ## Acknowledgments
 Code borrows heavily from [pix2pix](https://github.com/phillipi/pix2pix) and [DCGAN-tensorflow](https://github.com/carpedm20/DCGAN-tensorflow/blob/master/model.py). Thanks for their excellent work!
+
+## License
+MIT
